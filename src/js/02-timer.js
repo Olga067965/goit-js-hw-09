@@ -10,6 +10,7 @@ const minutesValue = document.querySelector('[data-minutes]');
 const secondsValue = document.querySelector('[data-seconds]');
 
 let countdownIntervalId;
+let timerRunning = false;
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -65,6 +66,9 @@ function startCountdown() {
       clearInterval(countdownIntervalId);
       updateTimerDisplay({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       Notiflix.Notify.success('Countdown completed!');
+      startButton.disabled = false;
+      timerRunning = false;
+      dateTimePicker.disabled = false;
     } else {
       updateTimerDisplay(convertMs(timeRemaining));
     }
@@ -72,7 +76,12 @@ function startCountdown() {
 }
 
 startButton.addEventListener('click', () => {
-  startCountdown();
+  if (!timerRunning) {
+    startCountdown();
+    startButton.disabled = true;
+    timerRunning = true;
+    dateTimePicker.disabled = true;
+  }
 });
 
 flatpickr('#datetime-picker', {
@@ -93,3 +102,5 @@ flatpickr('#datetime-picker', {
     }
   },
 });
+
+startButton.disabled = true;
